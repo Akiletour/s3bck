@@ -1,7 +1,7 @@
-s3bck
-=====
+S3 Backup (s3bck)
+=================
 
-Put an archive, directory or file on S3 with s3cmd
+Put an archive, directory or file on S3 using s3bck and s3cmd
 
 Installation
 ------------
