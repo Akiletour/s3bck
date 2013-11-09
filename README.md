@@ -62,7 +62,14 @@ REMOVING THE TEMPORARY FILE
 SUCCESS: inrage_201311091923.tar.gz to s3://inrage/backup/inrage_201311091923.tar.gz
 ```
 
+About
+-----
+s3bck is a [inRage](http://www.inrage.fr) initiative.
+Created by Pascal GAULT.
+
 Reporting an issue or a feature request
 ---------------------------------------
 
 Issues and feature requests are tracked in the [Github issue tracker](https://github.com/Akiletour/s3bck/issues).
+
+
