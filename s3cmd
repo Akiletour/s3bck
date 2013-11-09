@@ -1,0 +1,48 @@
+#!/bin/bash
+
+if ! type -p s3cmd > /dev/null; then
+    echo "ERROR: s3cmd is not installed on the system (sudo apt-get install s3cmd)"
+    exit 1
+fi
+
+if [ ! $# == 1 ]; then
+        echo "ERROR: Missing argument (Usage : s3bck file_or_dir_to_backup)."
+        exit 1
+else
+        bckpath="$1"
+fi
+
+if [ ! -d "$bckpath" ]; then
+        echo  "ERROR: $bckpath does not exist !"
+        exit 1
+fi
+
+read -p "Compress the file (Y/n) ? " answer
+answer="${answer:-Y}"
+
+if [ "$(echo $answer | tr [:upper:] [:lower:])" == "y" ]; then
+        compress=true
+fi
+
+if [ $compress ]; then
+        DATE=$(date +%Y%m%d%H%M)
+        read -p "Archive name ([ARCHIVE-NAME]_$DATE.tar.gz): "  tarname
+        echo "COMPRESSING FILE TO TAR"
+        S3FILE="$tarname""_$DATE.tar.gz"
+        tar czf "$S3FILE" "$bckpath"
+else
+        S3FILE="$bckpath"
+fi
+
+read -p "Target S3 (BUCKET/DIRECTORY eg: inrage/backup): " s3input
+s3input="s3://$s3input/$S3FILE"
+echo "UPLOADING TO S3"
+
+s3cmd put --recursive "$S3FILE" "$s3input"
+
+if [ $compress ]; then
+        echo "REMOVING THE TEMPORARY FILE"
+        rm -rfv "$S3FILE"
+fi
+
+echo "SUCCESS: $S3FILE to $s3input"
